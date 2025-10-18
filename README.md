@@ -2,6 +2,7 @@
 
 ## Front-end
 - React
+- Vite
 - Tailwind
 
 ## Back-end

@@ -15,7 +15,7 @@ export default function SignInPage() {
   return (
     <Shell
       title="로그인"
-      subtitle="다시 만나서 반가워요!"
+      subtitle="무지막지 반가워요!"
       footer={
         <>
           아직 계정이 없으신가요?{" "}

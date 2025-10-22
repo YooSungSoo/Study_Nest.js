@@ -1,0 +1,195 @@
+// src/pages/PostDetailPage.tsx
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { currentUser } from "../services/auth.mock";
+
+import Shell from "./_Shell";
+import * as postService from "../services/post.service";
+import type { Post, Comment } from "../types/post";
+import CommentList from "../components/comments/CommentList";
+import CommentForm from "../components/comments/CommentForm";
+
+export default function PostDetailPage() {
+  const { id } = useParams(); // id: string | undefined
+  const nav = useNavigate();
+
+  const [post, setPost] = useState<Post | null>(null);
+  const [loadingPost, setLoadingPost] = useState(true);
+
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState(false); // 게시글 삭제
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null); // 댓글 삭제
+
+  // 댓글 작성
+  async function handleCreateComment(content: string) {
+    if (!id) return; // 가드
+    try {
+      setSubmitting(true);
+      const newC = await postService.createComment(id, content);
+      setComments((prev) => [...prev, newC]);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  // 댓글 삭제  ✅ useEffect 밖으로 이동
+  async function handleDeleteComment(commentId: string) {
+    if (!id) return; // 가드
+    const ok = window.confirm("이 댓글을 삭제하시겠습니까?");
+    if (!ok) return;
+    try {
+      setDeletingCommentId(commentId);
+      await postService.removeComment(id, commentId);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (e) {
+      alert((e as Error).message || "댓글 삭제 중 오류가 발생했습니다.");
+    } finally {
+      setDeletingCommentId(null);
+    }
+  }
+
+  // 게시글 삭제
+  async function handleDelete() {
+    if (!id) return; // 가드
+    const ok = window.confirm("정말 이 게시글을 삭제하시겠습니까?");
+    if (!ok) return;
+    try {
+      setDeleting(true);
+      await postService.remove(id);
+      alert("삭제되었습니다.");
+      nav("/"); // 메인(목록)으로 이동
+    } catch (e) {
+      alert((e as Error).message || "삭제 중 오류가 발생했습니다.");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  // 게시글/댓글 로드
+  useEffect(() => {
+    if (!id) return;        // 가드
+    const postId = id;      // ✅ 이후로는 string으로 고정
+
+    let mounted = true;
+
+    async function loadPost() {
+      try {
+        setLoadingPost(true);
+        const p = await postService.get(postId);     // string
+        if (mounted) setPost(p);
+      } finally {
+        setLoadingPost(false);
+      }
+    }
+
+    async function loadComments() {
+      try {
+        setLoadingComments(true);
+        const cs = await postService.listComments(postId); // string
+        if (mounted) setComments(cs);
+      } finally {
+        setLoadingComments(false);
+      }
+    }
+
+    loadPost();
+    loadComments();
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
+
+  // 잘못된 경로 처리
+  if (!id) {
+    return (
+      <Shell title="게시글" subtitle="잘못된 경로입니다.">
+        <button onClick={() => nav("/")} className="text-violet-600 underline">
+          메인으로
+        </button>
+      </Shell>
+    );
+  }
+
+  return (
+    <Shell
+      size="xl"
+      title={loadingPost ? "불러오는 중…" : post?.title ?? "글을 찾을 수 없습니다"}
+      subtitle={!loadingPost ? `작성자: ${post?.author ?? "-"}` : undefined}
+    >
+      {/* 본문 */}
+      <article className="rounded-3xl border border-slate-200 bg-white/80 backdrop-blur p-6">
+        {loadingPost ? (
+          <p className="text-sm text-slate-500">본문을 불러오는 중…</p>
+        ) : post ? (
+          <>
+            <div className="text-xs text-slate-500 flex items-center justify-between">
+              <time>{new Date(post.createdAt).toLocaleString()}</time>
+              {post.tags?.length ? <span>태그: {post.tags.join(", ")}</span> : null}
+            </div>
+            <div className="mt-4 text-slate-800 whitespace-pre-wrap leading-relaxed">
+              {post.content}
+            </div>
+          </>
+        ) : (
+          <div className="text-sm text-rose-600">게시글이 존재하지 않습니다.</div>
+        )}
+      </article>
+
+      {/* 댓글 목록 */}
+      <div className="mt-6">
+        <h3 className="text-base font-semibold text-slate-800">댓글</h3>
+        <div className="mt-2">
+          <CommentList
+            items={comments}
+            isLoading={loadingComments}
+            onDelete={handleDeleteComment}     // ✅ 정상 참조
+            deletingId={deletingCommentId}     // ✅ 삭제 중 표시
+            canDelete={true}
+          />
+        </div>
+      </div>
+
+      {/* 댓글 작성 */}
+      <div className="mt-4 rounded-3xl border border-slate-200 bg-white/80 backdrop-blur p-4">
+        <CommentForm onSubmit={handleCreateComment} submitting={submitting} />
+      </div>
+
+      {/* 하단 네비 */}
+      <div className="mt-6 flex justify-between">
+  <button onClick={() => nav(-1)} className="text-slate-600 hover:underline">
+    ← 뒤로가기
+  </button>
+
+  <div className="space-x-4">
+    {/* 작성자만 수정/삭제 노출 */}
+    {post?.author === currentUser.name && (
+      <>
+        <button
+          onClick={() => nav(`/posts/${id}/edit`)}
+          className="text-slate-700 hover:underline"
+        >
+          수정
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
+          className="rounded-2xl px-4 py-2 text-sm text-white bg-gradient-to-r from-rose-400 to-rose-500 shadow-sm active:scale-[.99] disabled:opacity-60"
+          title="게시글 삭제"
+        >
+          {deleting ? "삭제 중…" : "삭제"}
+        </button>
+      </>
+    )}
+
+    <button onClick={() => nav("/")} className="text-violet-600 hover:underline">
+      메인으로
+    </button>
+  </div>
+</div>
+
+    </Shell>
+  );
+}

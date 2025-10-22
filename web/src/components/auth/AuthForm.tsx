@@ -30,7 +30,7 @@ export default function AuthForm({
   const validate = () => {
     const next: typeof errors = {};
     if (!emailRe.test(email)) next.email = "이메일 형식을 확인해 주세요";
-    if (password.length < 6) next.password = "비밀번호는 6자 이상";
+    if (password.length < 4) next.password = "비밀번호는 4자 이상";
     if (mode === "signup" && nickname.trim().length < 2) next.nickname = "닉네임은 2자 이상";
     setErrors(next);
     return Object.keys(next).length === 0;

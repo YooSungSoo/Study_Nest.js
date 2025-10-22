@@ -105,9 +105,11 @@ export default function PostDetailPage() {
   if (!id) {
     return (
       <Shell title="게시글" subtitle="잘못된 경로입니다.">
-        <button onClick={() => nav("/")} className="text-violet-600 underline">
-          메인으로
-        </button>
+        <div className="rounded-2xl border border-white/60 bg-white/90 p-4 text-center shadow-[0_16px_32px_rgba(122,132,214,0.14)]">
+          <button onClick={() => nav("/")} className="text-indigo-500 hover:underline">
+            메인으로
+          </button>
+        </div>
       </Shell>
     );
   }
@@ -119,27 +121,28 @@ export default function PostDetailPage() {
       subtitle={!loadingPost ? `작성자: ${post?.author ?? "-"}` : undefined}
     >
       {/* 본문 */}
-      <article className="rounded-3xl border border-slate-200 bg-white/80 backdrop-blur p-6">
+      <article className="relative overflow-hidden rounded-[28px] border border-white/60 bg-white/90 p-6 shadow-[0_26px_52px_rgba(104,120,214,0.16)] backdrop-blur">
+        <div className="pointer-events-none absolute -top-32 right-[-40px] h-64 w-64 rounded-full bg-gradient-to-br from-indigo-100 via-sky-100 to-transparent opacity-60" />
         {loadingPost ? (
-          <p className="text-sm text-slate-500">본문을 불러오는 중…</p>
+          <p className="relative text-sm text-slate-500">본문을 불러오는 중…</p>
         ) : post ? (
-          <>
-            <div className="text-xs text-slate-500 flex items-center justify-between">
+          <div className="relative space-y-4">
+            <div className="flex items-center justify-between text-xs text-slate-500">
               <time>{new Date(post.createdAt).toLocaleString()}</time>
               {post.tags?.length ? <span>태그: {post.tags.join(", ")}</span> : null}
             </div>
-            <div className="mt-4 text-slate-800 whitespace-pre-wrap leading-relaxed">
+            <div className="whitespace-pre-wrap rounded-2xl bg-white/60 p-4 leading-relaxed text-slate-700 shadow-inner">
               {post.content}
             </div>
-          </>
+          </div>
         ) : (
-          <div className="text-sm text-rose-600">게시글이 존재하지 않습니다.</div>
+          <div className="relative text-sm text-rose-500">게시글이 존재하지 않습니다.</div>
         )}
       </article>
 
       {/* 댓글 목록 */}
       <div className="mt-6">
-        <h3 className="text-base font-semibold text-slate-800">댓글</h3>
+        <h3 className="text-base font-semibold text-slate-700">댓글</h3>
         <div className="mt-2">
           <CommentList
             items={comments}
@@ -152,30 +155,30 @@ export default function PostDetailPage() {
       </div>
 
       {/* 댓글 작성 */}
-      <div className="mt-4 rounded-3xl border border-slate-200 bg-white/80 backdrop-blur p-4">
+      <div className="mt-4 rounded-3xl border border-white/60 bg-white/90 p-4 shadow-[0_18px_34px_rgba(122,132,214,0.14)] backdrop-blur">
         <CommentForm onSubmit={handleCreateComment} submitting={submitting} />
       </div>
 
       {/* 하단 네비 */}
-      <div className="mt-6 flex justify-between">
-        <button onClick={() => nav(-1)} className="text-slate-600 hover:underline">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
+        <button onClick={() => nav(-1)} className="text-slate-500 transition hover:text-indigo-500">
           ← 뒤로가기
         </button>
 
-        <div className="space-x-4">
+        <div className="flex items-center gap-3">
           {/* 작성자만 수정/삭제 노출 */}
           {post?.author === currentUser.name && (
             <>
               <button
                 onClick={() => nav(`/posts/${id}/edit`)}
-                className="text-slate-700 hover:underline"
+                className="text-slate-500 transition hover:text-indigo-500"
               >
                 수정
               </button>
               <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="rounded-2xl px-4 py-2 text-sm text-white bg-gradient-to-r from-rose-400 to-rose-500 shadow-sm active:scale-[.99] disabled:opacity-60"
+                className="rounded-2xl bg-gradient-to-r from-rose-200 via-rose-300 to-rose-200 px-4 py-2 text-sm font-semibold text-rose-700 shadow-sm transition active:scale-[.98] disabled:opacity-60"
                 title="게시글 삭제"
               >
                 {deleting ? "삭제 중…" : "삭제"}
@@ -183,7 +186,7 @@ export default function PostDetailPage() {
             </>
           )}
 
-          <button onClick={() => nav("/")} className="text-violet-600 hover:underline">
+          <button onClick={() => nav("/")} className="text-indigo-500 hover:underline">
             메인으로
           </button>
         </div>

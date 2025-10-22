@@ -26,14 +26,14 @@ export default function SignInPage() {
 
   return (
     <Shell
-      title="로그인"
+      title="오늘 뭐 먹지?"
       subtitle="무지막지 반가워요!"
       footer={
         <>
           아직 계정이 없으신가요?{" "}
           <button
             onClick={() => nav("/signup")}
-            className="font-semibold text-violet-600 hover:underline"
+            className="font-semibold text-indigo-500 hover:underline"
           >
             회원가입
           </button>

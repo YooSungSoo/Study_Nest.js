@@ -45,26 +45,37 @@ export default function MainPage() {
 
   const header = useMemo(
     () => (
-      <header className="mx-auto max-w-5xl mb-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-800">
-            Jungle Project <span className="text-violet-600">Main</span>
-          </h1>
+      <header className="mx-auto mb-8 max-w-5xl">
+        <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/90 px-6 py-8 shadow-[0_26px_52px_rgba(104,120,214,0.16)] backdrop-blur">
+          <div className="pointer-events-none absolute -top-24 left-[-40px] h-48 w-48 rounded-full bg-gradient-to-br from-teal-100 via-emerald-100 to-transparent opacity-50" />
+          <div className="pointer-events-none absolute -bottom-32 right-[-60px] h-64 w-64 rounded-full bg-gradient-to-br from-indigo-100 via-sky-100 to-transparent opacity-60" />
 
-          <div className="flex gap-2">
-            <button
-              onClick={() => nav("/posts/new")}
-              className="rounded-2xl px-4 py-2 text-sm text-white bg-gradient-to-r from-violet-400 to-indigo-400 shadow-sm active:scale-[.99]"
-            >
-              글쓰기
-            </button>
-            <button
-              onClick={() => nav("/signin")}
-              className="rounded-2xl px-4 py-2 text-sm text-slate-700 bg-white/80 backdrop-blur border border-slate-200 hover:shadow-sm"
-              title="임시 로그아웃 (세션/토큰 로직 연결 전)"
-            >
-              로그아웃
-            </button>
+          <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Jungle Project</p>
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                먹고싶은 메뉴 기록 공간
+              </h1>
+              <p className="mt-2 text-sm text-slate-500">
+                정글 끝나면 진짜 다 먹는다..
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => nav("/posts/new")}
+                className="rounded-2xl bg-gradient-to-r from-indigo-200 via-sky-200 to-teal-200 px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-[0_16px_32px_rgba(112,129,245,0.28)] transition active:scale-[.97]"
+              >
+                새 글 작성
+              </button>
+              <button
+                onClick={() => nav("/signin")}
+                className="rounded-2xl border border-white/60 bg-white/90 px-5 py-2.5 text-sm font-semibold text-slate-500 shadow-sm transition hover:shadow"
+                title="임시 로그아웃 (세션/토큰 로직 연결 전)"
+              >
+                로그아웃
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -78,7 +89,7 @@ export default function MainPage() {
 
       {/* 에러 배너 */}
       {error ? (
-        <div className="mx-auto max-w-5xl mb-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-rose-700">
+        <div className="mx-auto mb-6 max-w-5xl rounded-2xl border border-rose-100 bg-rose-50/80 p-4 text-sm text-rose-600 shadow-[0_12px_26px_rgba(244,114,182,0.18)]">
           {error}
         </div>
       ) : null}

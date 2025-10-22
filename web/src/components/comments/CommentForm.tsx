@@ -25,7 +25,7 @@ export default function CommentForm({
   return (
     <form
       onSubmit={handle}
-      className="rounded-2xl border border-slate-200 bg-white/90 backdrop-blur p-4 shadow-sm"
+      className="rounded-2xl border border-white/60 bg-white/90 backdrop-blur p-4 shadow-[0_16px_32px_rgba(122,132,214,0.12)]"
     >
       <Textarea
         placeholder="따뜻한 댓글을 남겨주세요 (최대 500자)"

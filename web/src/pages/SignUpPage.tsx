@@ -2,11 +2,9 @@ import AuthForm, { type SignUpValues } from "../components/auth/AuthForm";
 import { useNavigate } from "react-router-dom";
 import Shell from "./_Shell";
 import { signUp as signUpRequest } from "../services/auth.service";
-import { useAuth } from "../auth/AuthContext";
 
 export default function SignUpPage() {
   const nav = useNavigate();
-  const { signIn } = useAuth();
 
   const handleSignUp = async (v: SignUpValues) => {
     try {
@@ -21,10 +19,8 @@ export default function SignUpPage() {
         nickname,
       });
 
-      // 회원가입 즉시 로그인 처리
-      await signIn(v.email, v.password);
-      alert(`${result.user.name}님, 회원가입이 완료되었습니다!`);
-      nav("/");
+      alert(`${result.user.name}님, 회원가입이 완료되었습니다! 로그인 후 이용해 주세요.`);
+      nav("/signin", { replace: true });
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "회원가입에 실패했습니다. 다시 시도해 주세요.";
@@ -39,7 +35,7 @@ export default function SignUpPage() {
       footer={
         <>
           이미 계정이 있으신가요?{" "}
-          <button onClick={() => nav("/signin")} className="font-semibold text-violet-600 hover:underline">
+          <button onClick={() => nav("/signin")} className="font-semibold text-indigo-500 hover:underline">
             로그인
           </button>
         </>

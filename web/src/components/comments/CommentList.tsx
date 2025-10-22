@@ -8,7 +8,7 @@ export default function CommentList({
   onDelete,
   deletingId,
   canDelete = true,
-   canDeleteFor,
+  canDeleteFor,
 }: {
   items: Comment[];
   isLoading?: boolean;
@@ -16,11 +16,11 @@ export default function CommentList({
   onDelete?: (id: string) => void;
   deletingId?: string | null;
   canDelete?: boolean;
-   canDeleteFor?: (c: Comment) => boolean;
+  canDeleteFor?: (c: Comment) => boolean;
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-4">
+      <div className="rounded-2xl border border-white/60 bg-white/90 backdrop-blur p-4 shadow-[0_16px_32px_rgba(122,132,214,0.12)]">
         <p className="text-sm text-slate-500">댓글을 불러오는 중…</p>
       </div>
     );
@@ -28,7 +28,7 @@ export default function CommentList({
 
   if (!items.length) {
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 text-center">
+      <div className="rounded-2xl border border-white/60 bg-white/90 backdrop-blur p-6 text-center shadow-[0_16px_32px_rgba(122,132,214,0.12)]">
         <p className="text-sm text-slate-500">{emptyText}</p>
       </div>
     );

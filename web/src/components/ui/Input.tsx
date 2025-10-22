@@ -8,10 +8,10 @@ export default function Input({ error, className = "", ...rest }: Props) {
     <div>
       <input
         className={
-          "w-full rounded-2xl border px-4 py-3 outline-none transition " +
+          "w-full rounded-2xl border px-4 py-3 outline-none transition bg-white/90 shadow-[0_4px_16px_rgba(140,152,235,0.12)] " +
           (error
-            ? "border-rose-300 focus:border-rose-400 focus:ring-2 focus:ring-rose-100 "
-            : "border-slate-200 focus:border-violet-300 focus:ring-2 focus:ring-violet-100 ") +
+            ? "border-rose-200 focus:border-rose-300 focus:ring-2 focus:ring-rose-100 "
+            : "border-white/60 focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 ") +
           className
         }
         {...rest}

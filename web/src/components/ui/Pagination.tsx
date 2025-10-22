@@ -18,11 +18,11 @@ export default function Pagination({
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="mt-6 flex items-center justify-center gap-2">
+    <div className="mt-8 flex items-center justify-center gap-2 text-sm">
       <button
         onClick={() => canPrev && onPageChange(page - 1)}
         disabled={!canPrev}
-        className="px-3 py-2 rounded-xl border border-slate-200 bg-white/80 disabled:opacity-50"
+        className="rounded-xl border border-white/60 bg-white/90 px-3 py-2 text-slate-500 shadow-sm transition hover:shadow disabled:cursor-not-allowed disabled:opacity-50"
       >
         이전
       </button>
@@ -31,10 +31,10 @@ export default function Pagination({
         <button
           key={p}
           onClick={() => onPageChange(p)}
-          className={`px-3 py-2 rounded-xl border ${
+          className={`rounded-xl border px-3 py-2 transition ${
             p === page
-              ? "border-violet-300 bg-violet-50 text-violet-700"
-              : "border-slate-200 bg-white/80 hover:shadow-sm"
+              ? "border-indigo-200 bg-indigo-100 text-indigo-600 shadow"
+              : "border-white/60 bg-white/90 text-slate-500 shadow-sm hover:shadow"
           }`}
         >
           {p}
@@ -44,7 +44,7 @@ export default function Pagination({
       <button
         onClick={() => canNext && onPageChange(page + 1)}
         disabled={!canNext}
-        className="px-3 py-2 rounded-xl border border-slate-200 bg-white/80 disabled:opacity-50"
+        className="rounded-xl border border-white/60 bg-white/90 px-3 py-2 text-slate-500 shadow-sm transition hover:shadow disabled:cursor-not-allowed disabled:opacity-50"
       >
         다음
       </button>

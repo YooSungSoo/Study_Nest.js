@@ -15,16 +15,16 @@ export default function PostList({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-3xl p-6 bg-white/70 backdrop-blur border border-slate-200">
-        <p className="text-slate-500 text-sm">목록을 불러오는 중…</p>
+      <div className="rounded-3xl border border-white/60 bg-white/90 p-6 text-center shadow-[0_20px_40px_rgba(108,124,214,0.12)] backdrop-blur">
+        <p className="text-sm text-slate-500">목록을 불러오는 중…</p>
       </div>
     );
   }
 
   if (!items.length) {
     return (
-      <div className="rounded-3xl p-6 bg-white/70 backdrop-blur border border-slate-200">
-        <p className="text-slate-500 text-sm">{emptyText}</p>
+      <div className="rounded-3xl border border-white/60 bg-white/90 p-6 text-center shadow-[0_20px_40px_rgba(108,124,214,0.12)] backdrop-blur">
+        <p className="text-sm text-slate-500">{emptyText}</p>
       </div>
     );
   }

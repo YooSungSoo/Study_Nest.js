@@ -59,7 +59,9 @@ export default function PostEditPage() {
   if (!id) {
     return (
       <Shell title="수정" subtitle="잘못된 경로입니다.">
-        <button onClick={() => nav("/")} className="text-violet-600 underline">메인으로</button>
+        <div className="rounded-2xl border border-white/60 bg-white/90 p-4 text-center shadow-[0_16px_32px_rgba(122,132,214,0.14)]">
+          <button onClick={() => nav("/")} className="text-indigo-500 hover:underline">메인으로</button>
+        </div>
       </Shell>
     );
   }
@@ -67,29 +69,33 @@ export default function PostEditPage() {
   return (
     <Shell size="xl" title="게시물 수정" subtitle={post ? `현재 제목: ${post.title}` : undefined}>
       {error ? (
-        <div className="mb-3 rounded-xl border border-rose-200 bg-rose-50 p-3 text-rose-700">
+        <div className="mb-6 rounded-2xl border border-rose-100 bg-rose-50/80 p-4 text-sm text-rose-600 shadow-[0_12px_24px_rgba(244,114,182,0.18)]">
           {error}
         </div>
       ) : null}
 
       {loading ? (
-        <div className="rounded-3xl border border-slate-200 bg-white/80 backdrop-blur p-6">
-          <p className="text-sm text-slate-500">기존 내용을 불러오는 중…</p>
+        <div className="rounded-[28px] border border-white/60 bg-white/90 p-6 text-sm text-slate-500 shadow-[0_24px_48px_rgba(108,124,214,0.14)] backdrop-blur">
+          기존 내용을 불러오는 중…
         </div>
       ) : post ? (
-        <PostForm
-          initial={{ title: post.title, content: post.content, tags: post.tags ?? [] }}
-          submitting={submitting}
-          onSubmit={handleUpdate}
-        />
+        <div className="rounded-[28px] border border-white/60 bg-white/90 p-6 shadow-[0_24px_48px_rgba(108,124,214,0.14)] backdrop-blur">
+          <PostForm
+            initial={{ title: post.title, content: post.content, tags: post.tags ?? [] }}
+            submitting={submitting}
+            onSubmit={handleUpdate}
+          />
+        </div>
       ) : (
-        <div className="text-sm text-rose-600">게시글을 찾을 수 없습니다.</div>
+        <div className="rounded-2xl border border-rose-100 bg-rose-50/80 p-4 text-sm text-rose-600 shadow-[0_12px_26px_rgba(244,114,182,0.18)]">
+          게시글을 찾을 수 없습니다.
+        </div>
       )}
 
       {/* 하단 네비(선택) */}
-      <div className="mt-6 flex justify-between">
-        <button onClick={() => nav(-1)} className="text-slate-600 hover:underline">← 뒤로가기</button>
-        <button onClick={() => nav(`/posts/${id}`)} className="text-violet-600 hover:underline">상세로</button>
+      <div className="mt-6 flex justify-between text-sm">
+        <button onClick={() => nav(-1)} className="text-slate-500 transition hover:text-indigo-500">← 뒤로가기</button>
+        <button onClick={() => nav(`/posts/${id}`)} className="text-indigo-500 hover:underline">상세로</button>
       </div>
     </Shell>
   );

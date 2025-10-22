@@ -13,24 +13,29 @@ export default function Shell({
   size?: "narrow" | "wide" | "xl";
 }) {
   return (
-    
-     <div className="min-h-screen w-full grid place-items-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full px-4 py-16 sm:px-6 lg:px-8">
       <div
-        // ⬇️ 템플릿 문자열 안에서 직접 분기 (Tailwind가 확실히 인식)
         className={`mx-auto w-full ${
-          size === "xl"   ? "max-w-5xl"
-        : size === "wide" ? "max-w-4xl"
-                          : "max-w-md"
+          size === "xl"
+            ? "max-w-5xl"
+            : size === "wide"
+              ? "max-w-4xl"
+              : "max-w-md"
         }`}
       >
-        <div className="rounded-3xl shadow-md p-8 bg-white/80 backdrop-blur">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-800">{title}</h1>
-            {subtitle && <p className="mt-1 text-slate-500">{subtitle}</p>}
+        <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/90 shadow-[0_28px_60px_rgba(94,112,214,0.18)] backdrop-blur-xl">
+          <div className="pointer-events-none absolute -top-40 right-[-60px] h-72 w-72 rounded-full bg-gradient-to-br from-indigo-100 via-purple-100 to-transparent opacity-70" />
+          <div className="pointer-events-none absolute -bottom-32 left-[-40px] h-64 w-64 rounded-full bg-gradient-to-tr from-emerald-100 via-teal-100 to-transparent opacity-60" />
+
+          <div className="relative p-8 sm:p-10">
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
+              {subtitle && <p className="mt-2 text-base text-slate-500">{subtitle}</p>}
+            </div>
+            {children}
           </div>
-          {children}
         </div>
-        {footer && <div className="mt-4 text-center text-sm text-slate-600">{footer}</div>}
+        {footer && <div className="mt-4 text-center text-sm text-slate-500">{footer}</div>}
       </div>
     </div>
   );

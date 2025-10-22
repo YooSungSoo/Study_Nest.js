@@ -82,22 +82,30 @@ export default function AuthForm({
           <Input
             id="password"
             type={showPw ? "text" : "password"}
-            placeholder="6자 이상 입력"
+            placeholder="4자 이상 입력"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={errors.password}
             autoComplete={mode === "signin" ? "current-password" : "new-password"}
+            className="pr-24"
           />
+          <button
+            type="button"
+            onClick={() => setShowPw((prev) => !prev)}
+            className="absolute inset-y-2 right-2 flex items-center rounded-xl border border-white/60 bg-white/90 px-3 text-xs font-semibold text-slate-500 shadow-sm transition hover:text-indigo-500"
+          >
+            {showPw ? "숨기기" : "보기"}
+          </button>
         </div>
       </div>
 
       {mode === "signin" && (
         <div className="flex items-center justify-between text-sm">
           <label className="inline-flex items-center gap-2 select-none">
-            <input type="checkbox" className="accent-violet-400" />
+            <input type="checkbox" className="accent-indigo-400" />
             <span className="text-slate-600">자동 로그인</span>
           </label>
-          <button type="button" className="text-violet-600 hover:underline">비밀번호 찾기</button>
+          <button type="button" className="text-indigo-500 hover:underline">비밀번호 찾기</button>
         </div>
       )}
 
@@ -108,9 +116,24 @@ export default function AuthForm({
       <Divider>또는</Divider>
 
       <div className="grid grid-cols-3 gap-3 text-sm">
-        <button type="button" className="rounded-xl border border-slate-200 bg-white/70 py-2 hover:border-slate-300">Google</button>
-        <button type="button" className="rounded-xl border border-slate-200 bg-white/70 py-2 hover:border-slate-300">GitHub</button>
-        <button type="button" className="rounded-xl border border-slate-200 bg-white/70 py-2 hover:border-slate-300">Kakao</button>
+        <button
+          type="button"
+          className="rounded-xl border border-transparent bg-gradient-to-r from-rose-200 to-rose-300 px-2 py-2 font-medium text-rose-700 shadow-sm transition hover:shadow"
+        >
+          Google
+        </button>
+        <button
+          type="button"
+          className="rounded-xl border border-transparent bg-slate-200 px-2 py-2 font-medium text-slate-700 shadow-sm transition hover:shadow"
+        >
+          GitHub
+        </button>
+        <button
+          type="button"
+          className="rounded-xl border border-transparent bg-amber-200 px-2 py-2 font-medium text-amber-700 shadow-sm transition hover:shadow"
+        >
+          Kakao
+        </button>
       </div>
     </form>
   );

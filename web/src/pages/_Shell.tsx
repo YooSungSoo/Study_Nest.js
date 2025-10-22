@@ -14,7 +14,7 @@ export default function Shell({
 }) {
   return (
     
-    <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+     <div className="min-h-screen w-full grid place-items-center px-4 sm:px-6 lg:px-8">
       <div
         // ⬇️ 템플릿 문자열 안에서 직접 분기 (Tailwind가 확실히 인식)
         className={`mx-auto w-full ${

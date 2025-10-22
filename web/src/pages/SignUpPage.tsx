@@ -1,15 +1,35 @@
 import AuthForm, { type SignUpValues } from "../components/auth/AuthForm";
-import Shell from "./_Shell";
 import { useNavigate } from "react-router-dom";
+import Shell from "./_Shell";
+import { signUp as signUpRequest } from "../services/auth.service";
+import { useAuth } from "../auth/AuthContext";
 
 export default function SignUpPage() {
   const nav = useNavigate();
+  const { signIn } = useAuth();
 
   const handleSignUp = async (v: SignUpValues) => {
-    // TODO: 실제 회원가입 API 연동 (예: await auth.signUp(v))
-    await new Promise((r) => setTimeout(r, 800));
-    alert(`회원가입 완료: ${v.nickname ?? "사용자"} (${v.email})`);
-    nav("/signin");
+    try {
+      const nickname = v.nickname?.trim();
+      if (!nickname) {
+        throw new Error("닉네임을 입력해 주세요.");
+      }
+
+      const result = await signUpRequest({
+        email: v.email,
+        password: v.password,
+        nickname,
+      });
+
+      // 회원가입 즉시 로그인 처리
+      await signIn(v.email, v.password);
+      alert(`${result.user.name}님, 회원가입이 완료되었습니다!`);
+      nav("/");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "회원가입에 실패했습니다. 다시 시도해 주세요.";
+      alert(message);
+    }
   };
 
   return (

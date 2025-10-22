@@ -1,5 +1,6 @@
 // src/auth/AuthContext.tsx
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { signIn as signInRequest } from "../services/auth.service";
 
 export type User = { name: string; email: string };
 
@@ -8,11 +9,14 @@ type AuthContextType = {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
+  // 선택: 토큰을 다른 서비스에서 읽고 싶을 때 사용
+  getToken: () => string | null;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const LS_KEY = "app.auth.user";
+const LS_USER = "app.auth.user";
+const LS_TOKEN = "app.auth.token";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -20,30 +24,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 앱 시작 시 로컬스토리지에서 세션 복원
   useEffect(() => {
-    const raw = localStorage.getItem(LS_KEY);
-    if (raw) {
-      try {
-        setUser(JSON.parse(raw));
-      } catch {}
+    try {
+      const rawUser = localStorage.getItem(LS_USER);
+      const token = localStorage.getItem(LS_TOKEN);
+      if (rawUser && token) {
+        setUser(JSON.parse(rawUser));
+      }
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   async function signIn(email: string, password: string) {
-    // TODO: 실제 API 연동 시 여기에서 요청 후 토큰/유저정보 저장
-    // 지금은 데모: 아무 값이나 OK
-    await new Promise((r) => setTimeout(r, 300));
-    const next = { name: email.split("@")[0] || "Soo", email };
-    setUser(next);
-    localStorage.setItem(LS_KEY, JSON.stringify(next));
+    try {
+      const data = await signInRequest({ email, password });
+      setUser(data.user);
+      localStorage.setItem(LS_USER, JSON.stringify(data.user));
+      localStorage.setItem(LS_TOKEN, data.token);
+    } catch (err) {
+      throw err instanceof Error ? err : new Error("로그인 중 오류");
+    }
   }
 
   function signOut() {
     setUser(null);
-    localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_USER);
+    localStorage.removeItem(LS_TOKEN);
   }
 
-  const value = useMemo(() => ({ user, loading, signIn, signOut }), [user, loading]);
+  function getToken() {
+    return localStorage.getItem(LS_TOKEN);
+  }
+
+  const value = useMemo(
+    () => ({ user, loading, signIn, signOut, getToken }),
+    [user, loading]
+  );
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

@@ -23,26 +23,26 @@ export default function PostDetailPage() {
   const [deleting, setDeleting] = useState(false); // 게시글 삭제
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null); // 댓글 삭제
 
-  // 댓글 작성
+  // 댓글 작성 (✅ 사용자명 전달)
   async function handleCreateComment(content: string) {
-    if (!id) return; // 가드
+    if (!id) return;
     try {
       setSubmitting(true);
-      const newC = await postService.createComment(id, content);
+      const newC = await postService.createComment(id, content, currentUser.name);
       setComments((prev) => [...prev, newC]);
     } finally {
       setSubmitting(false);
     }
   }
 
-  // 댓글 삭제  ✅ useEffect 밖으로 이동
+  // 댓글 삭제 (✅ 사용자명 전달)
   async function handleDeleteComment(commentId: string) {
-    if (!id) return; // 가드
+    if (!id) return;
     const ok = window.confirm("이 댓글을 삭제하시겠습니까?");
     if (!ok) return;
     try {
       setDeletingCommentId(commentId);
-      await postService.removeComment(id, commentId);
+      await postService.removeComment(id, commentId, currentUser.name);
       setComments((prev) => prev.filter((c) => c.id !== commentId));
     } catch (e) {
       alert((e as Error).message || "댓글 삭제 중 오류가 발생했습니다.");
@@ -51,14 +51,14 @@ export default function PostDetailPage() {
     }
   }
 
-  // 게시글 삭제
+  // 게시글 삭제 (✅ 사용자명 전달)
   async function handleDelete() {
-    if (!id) return; // 가드
+    if (!id) return;
     const ok = window.confirm("정말 이 게시글을 삭제하시겠습니까?");
     if (!ok) return;
     try {
       setDeleting(true);
-      await postService.remove(id);
+      await postService.remove(id, currentUser.name);
       alert("삭제되었습니다.");
       nav("/"); // 메인(목록)으로 이동
     } catch (e) {
@@ -70,15 +70,15 @@ export default function PostDetailPage() {
 
   // 게시글/댓글 로드
   useEffect(() => {
-    if (!id) return;        // 가드
-    const postId = id;      // ✅ 이후로는 string으로 고정
+    if (!id) return;
+    const postId = id;
 
     let mounted = true;
 
     async function loadPost() {
       try {
         setLoadingPost(true);
-        const p = await postService.get(postId);     // string
+        const p = await postService.get(postId);
         if (mounted) setPost(p);
       } finally {
         setLoadingPost(false);
@@ -88,7 +88,7 @@ export default function PostDetailPage() {
     async function loadComments() {
       try {
         setLoadingComments(true);
-        const cs = await postService.listComments(postId); // string
+        const cs = await postService.listComments(postId);
         if (mounted) setComments(cs);
       } finally {
         setLoadingComments(false);
@@ -102,7 +102,6 @@ export default function PostDetailPage() {
     };
   }, [id]);
 
-  // 잘못된 경로 처리
   if (!id) {
     return (
       <Shell title="게시글" subtitle="잘못된 경로입니다.">
@@ -145,9 +144,9 @@ export default function PostDetailPage() {
           <CommentList
             items={comments}
             isLoading={loadingComments}
-            onDelete={handleDeleteComment}     // ✅ 정상 참조
-            deletingId={deletingCommentId}     // ✅ 삭제 중 표시
-            canDelete={true}
+            onDelete={handleDeleteComment}
+            deletingId={deletingCommentId}
+            canDelete={true} // 서버에서 최종 권한 검증, UI는 일단 노출
           />
         </div>
       </div>
@@ -159,37 +158,36 @@ export default function PostDetailPage() {
 
       {/* 하단 네비 */}
       <div className="mt-6 flex justify-between">
-  <button onClick={() => nav(-1)} className="text-slate-600 hover:underline">
-    ← 뒤로가기
-  </button>
-
-  <div className="space-x-4">
-    {/* 작성자만 수정/삭제 노출 */}
-    {post?.author === currentUser.name && (
-      <>
-        <button
-          onClick={() => nav(`/posts/${id}/edit`)}
-          className="text-slate-700 hover:underline"
-        >
-          수정
+        <button onClick={() => nav(-1)} className="text-slate-600 hover:underline">
+          ← 뒤로가기
         </button>
-        <button
-          onClick={handleDelete}
-          disabled={deleting}
-          className="rounded-2xl px-4 py-2 text-sm text-white bg-gradient-to-r from-rose-400 to-rose-500 shadow-sm active:scale-[.99] disabled:opacity-60"
-          title="게시글 삭제"
-        >
-          {deleting ? "삭제 중…" : "삭제"}
-        </button>
-      </>
-    )}
 
-    <button onClick={() => nav("/")} className="text-violet-600 hover:underline">
-      메인으로
-    </button>
-  </div>
-</div>
+        <div className="space-x-4">
+          {/* 작성자만 수정/삭제 노출 */}
+          {post?.author === currentUser.name && (
+            <>
+              <button
+                onClick={() => nav(`/posts/${id}/edit`)}
+                className="text-slate-700 hover:underline"
+              >
+                수정
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="rounded-2xl px-4 py-2 text-sm text-white bg-gradient-to-r from-rose-400 to-rose-500 shadow-sm active:scale-[.99] disabled:opacity-60"
+                title="게시글 삭제"
+              >
+                {deleting ? "삭제 중…" : "삭제"}
+              </button>
+            </>
+          )}
 
+          <button onClick={() => nav("/")} className="text-violet-600 hover:underline">
+            메인으로
+          </button>
+        </div>
+      </div>
     </Shell>
   );
 }

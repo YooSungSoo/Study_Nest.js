@@ -18,7 +18,9 @@ export default function SignInPage() {
       await signIn(v.email, v.password);   // ✅ 전역 로그인
       nav(from, { replace: true });        // ✅ 원래 가려던 곳 or 메인으로
     } catch (e) {
-      alert("로그인 실패. 다시 시도해 주세요.");
+      const message =
+        e instanceof Error ? e.message : "로그인에 실패했습니다. 다시 시도해 주세요.";
+      alert(message);
     }
   };
 

@@ -54,10 +54,10 @@ export default function MainPage() {
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Jungle Project</p>
               <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                먹고싶은 메뉴 기록 공간
+                먹고싶은 점심 메뉴 기록 공간
               </h1>
               <p className="mt-2 text-sm text-slate-500">
-                정글 끝나면 진짜 다 먹는다..
+                먹고 싶은거 다 적어라..
               </p>
             </div>
 
